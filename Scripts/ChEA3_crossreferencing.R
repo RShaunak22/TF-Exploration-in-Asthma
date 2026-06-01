@@ -9,7 +9,7 @@ library(R.utils)
 #ChEA3 cross-referencing
 #BiocManager::install("GSEABase")
 library(GSEABase)
-all_tissues_TFs <- getGmt("/Users/radhikashaunak/Downloads/all_tissues.TFs (1).gmt")
+all_tissues_TFs <- getGmt("/Users/radhikashaunak/Downloads/all_tissues.TF.gmt")
 View(all_tissues_TFs)
 #Citation: Keenan AB, Torre D, Lachmann A, Leong AK, Wojciechowicz M, Utti V, Jagodnik K, 
 #Kropiwnicki E, Wang Z, Ma'ayan A (2019) ChEA3: transcription factor enrichment 
