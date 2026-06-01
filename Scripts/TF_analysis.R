@@ -30,8 +30,19 @@ for (TF in practice){
   exp_target <- FetchData(so_combined, vars = target_genes)
   practice_df <- rbind(practice_df, exp_target)
 }
-
-
+#alternative approach - since the original aim is to review cell-type TFs, for each final_database_celltype dataframe,
+#want to go back a step actually, want to go to the non-aggregated version with a TF-gene observation in each row
+#for JASPAR: final_JASPAR_specific, for ChEA3:since final_ChEA3_TFs and final_ChEA3_unique_TF and final_ChEA3_notnull all have 5649 obs use final_ChEA3_specific
+#create a list of TFs for JASPAR and ChEA3 for loop to refer to
+JASPAR_unique_TFs <- unique(final_JASPAR_specific$symbol)
+ChEA3_unique_TFs <- unique(as.character(final_ChEA3_specific$TF))
+#start with JASPAR unique TFs (smaller list):
+for (TF in JASPAR_unique_TFs) {
+  TF_subset <- final_JASPAR_specific[finalfinal_JASPAR_specific]
+  for (DEG in TF){
+    
+  }
+}
 #maybe need to readjust conserved_JASPAR and conserved_ChEA3 to a database with DEGs rather than a character list
 for (TF in database_conserved) {
   Target <- subset(so_combined@meta.data$rownames == TF) #nope - needs to be genes
