@@ -191,6 +191,8 @@ Idents(so_combined) <- "cell_type"
 # UMAP confirmation
 DimPlot(so_combined, reduction = "umap", label = TRUE, group.by = "cell_types")
 so_combined$cell_types
+#comparison with identities in dataset
+DimPlot(so_combined, reduction = "umap", label = TRUE, group.by = "Cluster")
 
 #Differential expression using mast
 
