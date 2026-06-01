@@ -13,8 +13,8 @@ require(data.table)
 library(dplyr)
 library(R.utils)
 setwd("/Users/radhikashaunak/Downloads/")
-mat_healthy <- fread("/Users/radhikashaunak/Downloads/healthy_epi.tsv.gz")
-meta_healthy <- read.table("/Users/radhikashaunak/Downloads/meta_healthy_epi.tsv", header=T, sep="\t", as.is=T, row.names=1)
+mat_healthy <- fread("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/healthy_epi.tsv.gz")
+meta_healthy <- read.table("/Users/radhikashaunak/Desktop/Asthma_TFs/Metadata/meta_healthy_epi.tsv", header=T, sep="\t", as.is=T, row.names=1)
 genes_healthy = mat_healthy[,1][[1]]
 genes_healthy = gsub(".+[|]", "", genes_healthy)
 mat_healthy = data.frame(mat_healthy[,-1], row.names=genes_healthy)
@@ -33,8 +33,8 @@ scatterplot2 <- FeatureScatter(so_healthy.filtered, feature1 = "nCount_RNA", fea
 scatterplot1 + scatterplot2
 
 #ASTHMA RNA-SEQ
-mat_asthma <- fread("/Users/radhikashaunak/Downloads/epithelial_asthma.tsv.gz")
-meta_asthma <- read.table("/Users/radhikashaunak/Downloads/meta_asthma.tsv", header=T, sep="\t", as.is=T, row.names=1)
+mat_asthma <- fread("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/epithelial_asthma.tsv.gz")
+meta_asthma <- read.table("/Users/radhikashaunak/Desktop/Asthma_TFs/Metadata/meta_asthma.tsv", header=T, sep="\t", as.is=T, row.names=1)
 genes_asthma = mat_asthma[,1][[1]]
 genes_asthma = gsub(".+[|]", "", genes_asthma)
 mat_asthma = data.frame(mat_asthma[,-1], row.names=genes_asthma)

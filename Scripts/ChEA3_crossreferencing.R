@@ -9,7 +9,7 @@ library(R.utils)
 #ChEA3 cross-referencing
 #BiocManager::install("GSEABase")
 library(GSEABase)
-all_tissues_TFs <- getGmt("/Users/radhikashaunak/Downloads/all_tissues.TF.gmt")
+all_tissues_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/all_tissues.TFs.gmt")
 View(all_tissues_TFs)
 #Citation: Keenan AB, Torre D, Lachmann A, Leong AK, Wojciechowicz M, Utti V, Jagodnik K, 
 #Kropiwnicki E, Wang Z, Ma'ayan A (2019) ChEA3: transcription factor enrichment 
@@ -24,7 +24,7 @@ View(all_tissues_df)
 tf_crossover_chea3_all <- merge(sig_results_total, all_tissues_df, by="gene", all=FALSE)
 
 #lungs TF
-lung_TFs <- getGmt("/Users/radhikashaunak/Downloads/lung.TFs.gmt")
+lung_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/lung.TFs.gmt")
 View(lung_TFs)
 lungs_TFs_list <- setNames(geneIds(lung_TFs), names(lung_TFs))
 lung_df <- stack(lungs_TFs_list)
@@ -33,7 +33,7 @@ colnames(lung_df) <- c("gene", "TF")
 
 tf_crossover_lung <- merge(sig_results_total, lung_df, by="gene", all=FALSE)
 #coexpression TFs
-coexp_TFs <- getGmt("/Users/radhikashaunak/Downloads/ARCHS4_Coexpression.gmt")
+coexp_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/ARCHS4_Coexpression.gmt")
 View(coexp_TFs)
 coexp_TFs_list <- setNames(geneIds(coexp_TFs), names(coexp_TFs))
 coexp_df <- stack(coexp_TFs_list)
@@ -42,7 +42,7 @@ tf_crossover_coexp <- merge(sig_results_total, coexp_df, by="gene", all=FALSE)
 
 
 # ENCODE
-encode_TFs <- getGmt("/Users/radhikashaunak/Downloads/ENCODE_ChIP-seq.gmt")
+encode_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/ENCODE_ChIP-seq.gmt")
 View(encode_TFs)
 encode_TFs_list <- setNames(geneIds(encode_TFs), names(encode_TFs))
 encode_df <- stack(encode_TFs_list)
@@ -50,7 +50,7 @@ colnames(encode_df) <- c("gene", "TF")
 tf_crossover_encode <- merge(sig_results_total, encode_df, by="gene", all=FALSE)
 
 #ENRICHR
-enrichr_TFs <- getGmt("/Users/radhikashaunak/Downloads/Enrichr_Queries.gmt")
+enrichr_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/Enrichr_Queries.gmt")
 View(enrichr_TFs)
 enrichr_TFs_list <- setNames(geneIds(enrichr_TFs), names(enrichr_TFs))
 enrichr_df <- stack(enrichr_TFs_list)
@@ -58,7 +58,7 @@ colnames(enrichr_df) <- c("gene", "TF")
 tf_crossover_enrichr <- merge(sig_results_total, enrichr_df, by="gene", all=FALSE)
 
 #GTEX
-gtex_TFs <- getGmt("/Users/radhikashaunak/Downloads/GTEx_Coexpression.gmt")
+gtex_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/GTEx_Coexpression.gmt")
 View(gtex_TFs)
 gtex_TFs_list <- setNames(geneIds(gtex_TFs), names(gtex_TFs))
 gtex_df <- stack(gtex_TFs_list)
@@ -66,7 +66,7 @@ colnames(gtex_df) <- c("gene", "TF")
 tf_crossover_gtex <- merge(sig_results_total, gtex_df, by="gene", all=FALSE)
 
 #Literature
-lit_TFs <- getGmt("/Users/radhikashaunak/Downloads/Literature_ChIP-seq.gmt")
+lit_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/Literature_ChIP-seq.gmt")
 View(lit_TFs)
 lit_TFs_list <- setNames(geneIds(lit_TFs), names(lit_TFs))
 lit_df <- stack(lit_TFs_list)
@@ -74,7 +74,7 @@ colnames(lit_df) <- c("gene", "TF")
 tf_crossover_lit<- merge(sig_results_total, lit_df, by="gene", all=FALSE)
 
 #Remap
-remap_TFs <- getGmt("/Users/radhikashaunak/Downloads/ReMap_ChIP-seq.gmt")
+remap_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/ReMap_ChIP-seq.gmt")
 View(remap_TFs)
 remap_TFs_list <- setNames(geneIds(remap_TFs), names(remap_TFs))
 remap_df <- stack(remap_TFs_list)
