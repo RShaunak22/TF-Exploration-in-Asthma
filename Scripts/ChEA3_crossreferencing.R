@@ -29,15 +29,15 @@ View(lung_TFs)
 lungs_TFs_list <- setNames(geneIds(lung_TFs), names(lung_TFs))
 lung_df <- stack(lungs_TFs_list)
 colnames(lung_df) <- c("gene", "TF")
-
-
 tf_crossover_lung <- merge(sig_results_total, lung_df, by="gene", all=FALSE)
+
 #coexpression TFs
 coexp_TFs <- getGmt("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/ChEA3/ARCHS4_Coexpression.gmt")
 View(coexp_TFs)
 coexp_TFs_list <- setNames(geneIds(coexp_TFs), names(coexp_TFs))
 coexp_df <- stack(coexp_TFs_list)
 colnames(coexp_df) <- c("gene", "TF")
+coexp_df$TF <- factor(gsub("_ARCHS4_PEARSON","",coexp_df$TF))
 tf_crossover_coexp <- merge(sig_results_total, coexp_df, by="gene", all=FALSE)
 
 
@@ -47,6 +47,7 @@ View(encode_TFs)
 encode_TFs_list <- setNames(geneIds(encode_TFs), names(encode_TFs))
 encode_df <- stack(encode_TFs_list)
 colnames(encode_df) <- c("gene", "TF")
+encode_df$TF <- factor(gsub("_.*","",encode_df$TF))
 tf_crossover_encode <- merge(sig_results_total, encode_df, by="gene", all=FALSE)
 
 #ENRICHR
@@ -71,6 +72,7 @@ View(lit_TFs)
 lit_TFs_list <- setNames(geneIds(lit_TFs), names(lit_TFs))
 lit_df <- stack(lit_TFs_list)
 colnames(lit_df) <- c("gene", "TF")
+lit_df$TF <- factor(gsub("_.*","",lit_df$TF))
 tf_crossover_lit<- merge(sig_results_total, lit_df, by="gene", all=FALSE)
 
 #Remap
@@ -84,8 +86,9 @@ tf_crossover_remap <- merge(sig_results_total, remap_df, by="gene", all=FALSE)
 
 #merging to final dataframe
 final_ChEA3_df <- bind_rows(tf_crossover_chea3_all, tf_crossover_coexp, tf_crossover_encode,
-                         tf_crossover_enrichr, tf_crossover_gtex, tf_crossover_lit, 
+                           tf_crossover_enrichr,tf_crossover_gtex, tf_crossover_lit, 
                          tf_crossover_lung, tf_crossover_remap)
+
 #removing duplicates from dataframe
 final_ChEA3_df_unique <- final_ChEA3_df[!duplicated(final_ChEA3_df[, c("TF", "gene","cell_type")]), ]
 #assuming this has worked because observations for each dataframe have reduced.
@@ -112,18 +115,20 @@ final_ChEA3_specific <- do.call(rbind, lapply(ct_list, function(ct) {
   subset_ct <- sense_check[sense_check$cell_type == ct, ]
   subset_ct[subset_ct$TF %in% present_TFs, ]
 }))
-final_ChEA3_TFs <- aggregate(gene ~ TF + cell_type, data = final_ChEA3_specific,FUN = function(x) paste(x, collapse = ","))
+#final_ChEA3_TFs <- aggregate(gene ~ TF + cell_type, data = final_ChEA3_specific,FUN = function(x) paste(x, collapse = ","))
 #further reduced but still rather large list!
 #inspired by JASPAR script, look for null values
-final_ChEA3_notnull <- Filter(Negate(is.null), final_ChEA3_TFs)
+final_ChEA3_notnull <- Filter(Negate(is.null), final_ChEA3_specific)
 #no change
 final_ChEA3_unique_TF <- final_ChEA3_notnull[!duplicated(final_ChEA3_notnull[,c("TF","cell_type")]), ]
 
-final_ChEA3_basal1 <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "Basal 1",]
-final_ChEA3_basal2 <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "Basal 2",]
-final_ChEA3_mucociliated <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "mucociliated",]
-final_ChEA3_ciliated1 <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "ciliated 1",]
-final_ChEA3_ciliated2 <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "ciliated 2",]
-final_ChEA3_goblet <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "goblet",]
-final_ChEA3_club <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "club",]
-final_ChEA3_ionocytes <- final_ChEA3_unique_TF[final_ChEA3_unique_TF$cell_type == "ionocytes",]
+final_ChEA3_TFs <- aggregate(gene ~ TF + cell_type, data = final_ChEA3_unique_TF,FUN = function(x) paste(x, collapse = ","))
+
+final_ChEA3_basal1 <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "Basal 1",]
+final_ChEA3_basal2 <- final_ChEA3_TFs[final_ChEA3_unique_TF$cell_type == "Basal 2",]
+final_ChEA3_mucociliated <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "mucociliated",]
+final_ChEA3_ciliated1 <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "ciliated 1",]
+final_ChEA3_ciliated2 <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "ciliated 2",]
+final_ChEA3_goblet <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "goblet",]
+final_ChEA3_club <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "club",]
+final_ChEA3_ionocytes <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "ionocytes",]

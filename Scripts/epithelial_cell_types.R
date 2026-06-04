@@ -14,6 +14,7 @@ library(dplyr)
 library(R.utils)
 setwd("/Users/radhikashaunak/Downloads/")
 mat_healthy <- fread("/Users/radhikashaunak/Desktop/Asthma_TFs/Originals/healthy_epi.tsv.gz")
+
 meta_healthy <- read.table("/Users/radhikashaunak/Desktop/Asthma_TFs/Metadata/meta_healthy_epi.tsv", header=T, sep="\t", as.is=T, row.names=1)
 genes_healthy = mat_healthy[,1][[1]]
 genes_healthy = gsub(".+[|]", "", genes_healthy)
