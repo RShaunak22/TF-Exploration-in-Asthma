@@ -227,7 +227,7 @@ for (ct in shared) {
   #extract a cell type-specific subset of the data
   subset_so_combined <- subset(so_combined, cell_types == ct)
   Idents(subset_so_combined) <- "condition"  # using "healthy" and "asthma" as identifying factors
-  #for each cell type find disease status-specific markers
+  #for each cell type find disease status-specific markers (i.e. DEGs)
   de_results[[ct]] <- FindMarkers(
     subset_so_combined,
     ident.1 = "asthma",

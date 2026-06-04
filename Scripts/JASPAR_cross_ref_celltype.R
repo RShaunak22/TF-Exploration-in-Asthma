@@ -9,8 +9,11 @@ library(motifmatchr)
 library(reshape2)
 library(SummarizedExperiment)
 #setup
+#reference genome
 txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+#extracting genes
 txdb_genes <- genes(txdb)
+#pfm acquisition from jaspar
 pfm_matrix <- getMatrixSet(JASPAR2022, 
                            opts = list(collection = "CORE", 
                                        tax_group = "vertebrates", 
@@ -26,10 +29,12 @@ loc_DEGs <- select(org.Hs.eg.db,
                         keys=rownames(sig_results_total), 
                         keytype="SYMBOL", 
                         columns=c("ENTREZID"))
-loc_DEGs$cell_type <-sig_results_total$cell_type
+loc_DEGs$cell_type <- sig_results_total[match(loc_DEGs$SYMBOL, 
+                                              rownames(sig_results_total)), 
+                                        "cell_type"]
 #check that genes exist
 loc_DEGs <- loc_DEGs[!is.na(loc_DEGs$ENTREZID), ]
-#find DEGs in ENTREZ ID format which map to txdb genome
+#find signficant DEGs in ENTREZ ID format which map to txdb genome
 loc_DEGs_valid <- loc_DEGs[loc_DEGs$ENTREZID %in% names(txdb_genes), ]
 valid_DEGs <- loc_DEGs_valid$ENTREZID
 #if ENTREZ IDs do not intersect for a cell type
@@ -45,7 +50,7 @@ motif_matches_DEGs <- matchMotifs(pfm_matrix,
                               promoters_DEGs, 
                               genome = BSgenome.Hsapiens.UCSC.hg38,
                               out = "scores")
-#extract scores and convert them into a dataframe format
+#extract prediction scores and convert them into a dataframe format
 scores <- assay(motif_matches_DEGs)
 scores_df <- as.data.frame(as.matrix(scores))
 #rows = DEG, cols = TF
