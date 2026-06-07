@@ -87,6 +87,7 @@ tf_results_unique <- tf_results_unique[!duplicated(tf_results_unique[c("symbol",
 final_JASPAR_present <- tf_results_unique[tf_results_unique$symbol %in% rownames(so_combined), , drop = FALSE]
 #like ChEA3 reduced but still rather large number of observations therefore sense check
 sense_check_JASPAR <- final_JASPAR_present[final_JASPAR_present$symbol_DEG %in% rownames(so_combined), , drop = FALSE]
+#sense check passed: no DEG info added
 #check that cell-type trends are retained
 final_JASPAR_specific <- final_JASPAR_present %>%
   group_by(cell_type) %>%
@@ -97,7 +98,6 @@ final_JASPAR_specific <- final_JASPAR_present %>%
   }) %>%
   ungroup()
 
-#no change therefore passed sense check
 #now want to group (using aggregate function) gene info and have unique TFs
 #notes: gene ~ TF in many ~ one relationship
 final_JASPAR_TFs <- aggregate(symbol_DEG ~ symbol + cell_type, data = final_JASPAR_specific, FUN = function(x) paste(x, collapse = ","))
@@ -106,13 +106,7 @@ final_JASPAR_basal1 <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "Basal 1",
 final_JASPAR_basal2 <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "Basal 2",]
 final_JASPAR_ciliated1 <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "ciliated 1",]
 final_JASPAR_ciliated2 <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "ciliated 2",]
-#no TFs
 final_JASPAR_club <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "club",]
 final_JASPAR_goblet <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "goblet",]
 final_JASPAR_mucociliated <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "Mucociliated",]
-#no TFs
 final_JASPAR_ionocytes <- final_JASPAR_TFs[final_JASPAR_TFs$cell_type == "Ionocytes",]
-#sense check: True therefore TF symbols identical. 
-if (identical(final_JASPAR_basal1$symbol,final_JASPAR_ciliated1$symbol)) {
-  print("TRUE")
-} else print("FALSE")

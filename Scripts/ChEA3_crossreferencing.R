@@ -98,9 +98,6 @@ final_ChEA3_present <- final_ChEA3_df_unique[final_ChEA3_df_unique$TF %in% rowna
 sense_check <- final_ChEA3_present[final_ChEA3_present$gene %in% rownames(so_combined), , drop = FALSE]
 #sense check passed. Genes in final_ChEA3_present list are also found in so_combined object
 #i.e. only genes which are present in dataset are in this list
-#now want to group (using aggregate function) gene info and have unique TFs
-#notes: gene ~ TF in many ~ one relationship
-#final_ChEA3_TFs <- aggregate(gene ~ TF + cell_type, data = final_ChEA3_present,FUN = function(x) paste(x, collapse = ","))
 #it occurred to me that cell-type specific TFs in my seurat object may be reflected 
 #across multiple cell-types in my dataset if they are present there. 
 #However, I want TFs which reflect cell-type trends in my seurat object
@@ -115,13 +112,13 @@ final_ChEA3_specific <- do.call(rbind, lapply(ct_list, function(ct) {
   subset_ct <- sense_check[sense_check$cell_type == ct, ]
   subset_ct[subset_ct$TF %in% present_TFs, ]
 }))
-#final_ChEA3_TFs <- aggregate(gene ~ TF + cell_type, data = final_ChEA3_specific,FUN = function(x) paste(x, collapse = ","))
 #further reduced but still rather large list!
 #inspired by JASPAR script, look for null values
 final_ChEA3_notnull <- Filter(Negate(is.null), final_ChEA3_specific)
 #no change
 final_ChEA3_unique_TF <- final_ChEA3_notnull[!duplicated(final_ChEA3_notnull[,c("TF","cell_type")]), ]
-
+#now want to group (using aggregate function) gene info and have unique TFs
+#notes: gene ~ TF in many ~ one relationship
 final_ChEA3_TFs <- aggregate(gene ~ TF + cell_type, data = final_ChEA3_unique_TF,FUN = function(x) paste(x, collapse = ","))
 
 final_ChEA3_basal1 <- final_ChEA3_TFs[final_ChEA3_TFs$cell_type == "Basal 1",]

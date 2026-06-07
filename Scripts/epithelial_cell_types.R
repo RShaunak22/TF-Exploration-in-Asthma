@@ -202,8 +202,8 @@ DimPlot(so_combined, reduction = "umap", label = TRUE, group.by = "Cluster")
 #M Yajima, J Deng, V Gersuk, AK Shalek, CK Slichter et al Genome biology 16 (1), 278
 
 #installing MAST
-install.packages("BiocManager")
-BiocManager::install("MAST")
+#install.packages("BiocManager")
+#BiocManager::install("MAST")
 #ensure that cell identities are unique
 cell_identity <- unique(so_combined$cell_types)
 #cell types identified in asthma and healthy individuals differed
@@ -255,7 +255,6 @@ sig_ciliated2 <- de_results[["ciliated 2"]]%>%
   filter(p_val_adj < 0.05)
 sig_ciliated2$cell_type <- "ciliated 2"
 sig_ciliated2$gene <- rownames(sig_ciliated2)
-#no significant results in ciliated 2 cell type
 sig_mucociliated <- de_results[["mucociliated"]]%>%
   filter(p_val_adj < 0.05)
 sig_mucociliated$cell_type <- "mucociliated"
