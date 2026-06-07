@@ -37,9 +37,11 @@ for (TF in practice){
 JASPAR_unique_TFs <- unique(final_JASPAR_specific$symbol)
 ChEA3_unique_TFs <- unique(as.character(final_ChEA3_specific$TF))
 #start with JASPAR unique TFs (smaller list):
+TF_subset <- final_JASPAR_specific[final_JASPAR_specific$symbol == "ZNF282",]
+#logic issue! TFs and DEGs differ in cell types
 for (TF in JASPAR_unique_TFs) {
-  TF_subset <- final_JASPAR_specific[final_JASPAR_specific$symbol == TF]
-  non-target <- final_JASPAR_specific[final_JASPAR_specific$symbol != TF]
+  TF_subset <- final_JASPAR_specific[final_JASPAR_specific$symbol == TF,]
+  non-target <- final_JASPAR_specific[final_JASPAR_specific$symbol != TF,]
   for (DEG in TF_subset){
     
   }
