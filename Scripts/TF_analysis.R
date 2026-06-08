@@ -106,3 +106,24 @@ for (i in seq_along(goblet_unique_TF)) {
   
 }
 goblet_KS_results_filtered <- goblet_KS_results %>% filter(p_val < 0.05)
+
+#ChEA3
+#ciliated 1 cluster for ChEA3 - INCOMPLETE
+ciliated1_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "ciliated 1",] %>%
+  dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
+ciliated1_unique_ChEA3 <- as.character(unique(ciliated1_gene_TF_ChEA3$TF))
+#start with ciliated 1 cluster for ChEA3
+ciliated1_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_ciliated1), ncol = 2))
+colnames(ciliated1_KS_results_ChEA3) <- c("TF", "p_val")
+for (i in seq_along(ciliated1_unique_ChEA3)) {
+  #subset target DEGs
+  TF <- ciliated1_unique_ChEA3[i]
+  TF_target <- ciliated1_gene_TF_ChEA3[ciliated1_gene_TF_ChEA3$TF == TF,]
+  #subset non-target DEGs
+  non_target_TF <- ciliated1_gene_TF_ChEA3[ciliated1_gene_TF_ChEA3$TF != TF,]
+  #adding results
+  ciliated1_KS_results_ChEA3$TF[i] <- TF
+  ciliated1_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
+  
+}
+ciliated1_ChEA3_KS_filtered <- ciliated1_KS_results_ChEA3 %>% filter(p_val < 0.05)
