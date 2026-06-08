@@ -30,23 +30,32 @@ for (TF in practice){
   exp_target <- FetchData(so_combined, vars = target_genes)
   practice_df <- rbind(practice_df, exp_target)
 }
-#alternative approach - since the original aim is to review cell-type TFs, for each final_database_celltype dataframe,
+#alternative approach - since the original aim is to review cell-type TFs, want to have cell-type specific TFs
 #want to go back a step actually, want to go to the non-aggregated version with a TF-gene observation in each row
-#for JASPAR: final_JASPAR_specific, for ChEA3:since final_ChEA3_TFs and final_ChEA3_unique_TF and final_ChEA3_notnull all have 5649 obs use final_ChEA3_specific
-#create a list of TFs for JASPAR and ChEA3 for loop to refer to
-JASPAR_unique_TFs <- unique(final_JASPAR_specific$symbol)
-ChEA3_unique_TFs <- unique(as.character(final_ChEA3_specific$TF))
-#start with JASPAR unique TFs (smaller list):
-TF_subset <- final_JASPAR_specific[final_JASPAR_specific$symbol == "ZNF282",]
-#logic issue! TFs and DEGs differ in cell types
-for (TF in JASPAR_unique_TFs) {
-  TF_subset <- final_JASPAR_specific[final_JASPAR_specific$symbol == TF,]
-  non-target <- final_JASPAR_specific[final_JASPAR_specific$symbol != TF,]
-  for (DEG in TF_subset){
+#for JASPAR: final_JASPAR_specific, for ChEA3:since final_ChEA3_TFs and final_ChEA3_unique_TF and final_ChEA3_notnull all have 5649 obs use final_ChEA3_specifi
+#JASPAR
+ciliated1_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "ciliated 1",] %>% filter(score > 0)
+ciliated1_unique_TF <- unique(ciliated1_gene_TF_JASPAR$symbol)
+ciliated2_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "ciliated 2",] %>% filter(score > 0)
+ciliated2_unique_TF <- unique(ciliated2_gene_TF_JASPAR$symbol)
+club_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "club",] %>% filter(score > 0)
+club_unique_TF <- unique(club_gene_TF_JASPAR$symbol)
+goblet_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "goblet",] %>% filter(score > 0)
+goblet_unique_TF <- unique(goblet_gene_TF_JASPAR$symbol)
+#start with ciliated 1 cluster
+for (TF in ciliated1_unique_TF) {
+  #subset target DEGs
+  TF_target <- ciliated1_gene_TF_JASPAR[ciliated1_gene_TF_JASPAR$symbol == TF,]
+  #get a unique target DEG list for the second loop to refer to
+  target_unique <- unique(TF_target$symbol_DEG)
+    for (DEG in target_unique){
     
-  }
-}
-#maybe need to readjust conserved_JASPAR and conserved_ChEA3 to a database with DEGs rather than a character list
-for (TF in database_conserved) {
-  Target <- subset(so_combined@meta.data$rownames == TF) #nope - needs to be genes
+    }
+  #subset non-target DEGs
+  non-target_TF <- final_JASPAR_specific[final_JASPAR_specific$symbol != TF,]
+  #get a unique target DEG list for the second loop to refer to
+  non_target_unique <- unique(non_target_TF$symbol_DEG)
+    for (gene in non_target_unique) {
+      
+    }
 }
