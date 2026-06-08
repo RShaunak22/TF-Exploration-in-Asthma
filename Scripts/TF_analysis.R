@@ -27,10 +27,6 @@ colnames(ciliated1_gene_TF_JASPAR)[1] <- "gene"
 ciliated1_KS <- ciliated1_gene_TF_JASPAR %>% left_join(sig_ciliated1, by = "gene") %>%
   dplyr::select("gene","symbol", "score", "p_val_adj", "avg_log2FC")
 ciliated1_unique_TF <- unique(ciliated1_gene_TF_JASPAR$symbol)
-club_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "club",] %>% filter(score > 0)
-club_unique_TF <- unique(club_gene_TF_JASPAR$symbol)
-goblet_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "goblet",] %>% filter(score > 0)
-goblet_unique_TF <- unique(goblet_gene_TF_JASPAR$symbol)
 #start with ciliated 1 cluster for JASPAR
 ciliated1_KS_results <- data.frame(matrix(NA, nrow = nrow(final_JASPAR_ciliated1), ncol = 2))
 colnames(ciliated1_KS_results) <- c("TF", "p_val")
@@ -38,12 +34,8 @@ for (i in seq_along(ciliated1_unique_TF)) {
   #subset target DEGs
   TF <- ciliated1_unique_TF[i]
   TF_target <- ciliated1_KS[ciliated1_KS$symbol == TF,]
-  #get a unique target DEG list for the second loop to refer to
-  target_unique <- unique(TF_target$gene)
   #subset non-target DEGs
   non_target_TF <- ciliated1_KS[ciliated1_KS$symbol != TF,]
-  #get a unique target DEG list for the second loop to refer to
-  non_target_unique <- unique(non_target_TF$gene)
   #adding results
   ciliated1_KS_results$TF[i] <- TF
   ciliated1_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
@@ -64,12 +56,9 @@ for (i in seq_along(ciliated2_unique_TF)) {
   #subset target DEGs
   TF <- ciliated2_unique_TF[i]
   TF_target <- ciliated2_KS[ciliated2_KS$symbol == TF,]
-  #get a unique target DEG list for the second loop to refer to
-  target_unique <- unique(TF_target$gene)
   #subset non-target DEGs
   non_target_TF <- ciliated2_KS[ciliated2_KS$symbol != TF,]
-  #get a unique target DEG list for the second loop to refer to
-  non_target_unique <- unique(non_target_TF$gene)
+  #recording results
   ciliated2_KS_results$TF[i] <- TF
   ciliated2_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
@@ -88,14 +77,32 @@ for (i in seq_along(club_unique_TF)) {
   #subset target DEGs
   TF <- club_unique_TF[i]
   TF_target <- club_KS[club_KS$symbol == TF,]
-  #get a unique target DEG list for the second loop to refer to
-  target_unique <- unique(TF_target$gene)
   #subset non-target DEGs
   non_target_TF <- club_KS[club_KS$symbol != TF,]
-  #get a unique target DEG list for the second loop to refer to
-  non_target_unique <- unique(non_target_TF$gene)
+  #recording results
   club_KS_results$TF[i] <- TF
   club_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
 club_KS_results_filtered <- club_KS_results %>% filter(p_val < 0.05)
+
+#goblet cluster for JASPAR
+goblet_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "goblet",] %>% filter(score > 0)
+goblet_unique_TF <- unique(goblet_gene_TF_JASPAR$symbol)
+colnames(goblet_gene_TF_JASPAR)[1] <- "gene"
+goblet_KS <- goblet_gene_TF_JASPAR %>% left_join(sig_goblet, by = "gene") %>%
+  dplyr::select("gene","symbol", "score", "p_val_adj", "avg_log2FC")
+goblet_KS_results <- data.frame(matrix(NA, nrow = nrow(final_JASPAR_goblet), ncol = 2))
+colnames(goblet_KS_results) <- c("TF", "p_val")
+for (i in seq_along(goblet_unique_TF)) {
+  #subset target DEGs
+  TF <- goblet_unique_TF[i]
+  TF_target <- goblet_KS[goblet_KS$symbol == TF,]
+  #subset non-target DEGs
+  non_target_TF <- goblet_KS[goblet_KS$symbol != TF,]
+  #recording results
+  goblet_KS_results$TF[i] <- TF
+  goblet_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
+  
+}
+goblet_KS_results_filtered <- goblet_KS_results %>% filter(p_val < 0.05)
