@@ -76,4 +76,26 @@ for (i in seq_along(ciliated2_unique_TF)) {
 }
 ciliated2_KS_results_filtered <- ciliated2_KS_results %>% filter(p_val < 0.05)
 
-#club
+#club cluster for JASPAR
+club_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "club",] %>% filter(score > 0)
+club_unique_TF <- unique(club_gene_TF_JASPAR$symbol)
+colnames(club_gene_TF_JASPAR)[1] <- "gene"
+club_KS <- club_gene_TF_JASPAR %>% left_join(sig_club, by = "gene") %>%
+  dplyr::select("gene","symbol", "score", "p_val_adj", "avg_log2FC")
+club_KS_results <- data.frame(matrix(NA, nrow = nrow(final_JASPAR_club), ncol = 2))
+colnames(club_KS_results) <- c("TF", "p_val")
+for (i in seq_along(club_unique_TF)) {
+  #subset target DEGs
+  TF <- club_unique_TF[i]
+  TF_target <- club_KS[club_KS$symbol == TF,]
+  #get a unique target DEG list for the second loop to refer to
+  target_unique <- unique(TF_target$gene)
+  #subset non-target DEGs
+  non_target_TF <- club_KS[club_KS$symbol != TF,]
+  #get a unique target DEG list for the second loop to refer to
+  non_target_unique <- unique(non_target_TF$gene)
+  club_KS_results$TF[i] <- TF
+  club_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
+  
+}
+club_KS_results_filtered <- club_KS_results %>% filter(p_val < 0.05)
