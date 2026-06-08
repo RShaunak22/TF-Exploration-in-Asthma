@@ -49,8 +49,10 @@ club_unique_TF <- unique(club_gene_TF_JASPAR$symbol)
 goblet_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "goblet",] %>% filter(score > 0)
 goblet_unique_TF <- unique(goblet_gene_TF_JASPAR$symbol)
 #start with ciliated 1 cluster
+ciliated1_KS_results <- data.frame
 for (TF in ciliated1_unique_TF) {
   #subset target DEGs
+  ciliated1_KS_results[[TF]] <- TF
   TF_target <- ciliated1_KS[ciliated1_KS$symbol == TF,]
   #get a unique target DEG list for the second loop to refer to
   target_unique <- unique(TF_target$gene)
@@ -58,5 +60,6 @@ for (TF in ciliated1_unique_TF) {
   non_target_TF <- ciliated1_KS[ciliated1_KS$symbol != TF,]
   #get a unique target DEG list for the second loop to refer to
   non_target_unique <- unique(non_target_TF$gene)
-  ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)
+  ciliated1_KS_results$p_val <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)
+  
 }
