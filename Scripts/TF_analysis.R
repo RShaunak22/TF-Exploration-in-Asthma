@@ -108,9 +108,12 @@ for (i in seq_along(goblet_unique_TF)) {
 goblet_KS_results_filtered <- goblet_KS_results %>% filter(p_val < 0.05)
 
 #ChEA3
-#ciliated 1 cluster for ChEA3 - INCOMPLETE
+#adapted from JASPAR loops
+#slightly different as final_ChEA3_specific has log fold changes appended from ChEA3 script
+#ciliated 1 cluster for ChEA3
 ciliated1_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "ciliated 1",] %>%
   dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
+#as.character addition because unique originally stored as factor vector rather than character vector
 ciliated1_unique_ChEA3 <- as.character(unique(ciliated1_gene_TF_ChEA3$TF))
 #start with ciliated 1 cluster for ChEA3
 ciliated1_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_ciliated1), ncol = 2))
@@ -118,6 +121,7 @@ colnames(ciliated1_KS_results_ChEA3) <- c("TF", "p_val")
 for (i in seq_along(ciliated1_unique_ChEA3)) {
   #subset target DEGs
   TF <- ciliated1_unique_ChEA3[i]
+  #col name is TF not symbol
   TF_target <- ciliated1_gene_TF_ChEA3[ciliated1_gene_TF_ChEA3$TF == TF,]
   #subset non-target DEGs
   non_target_TF <- ciliated1_gene_TF_ChEA3[ciliated1_gene_TF_ChEA3$TF != TF,]
