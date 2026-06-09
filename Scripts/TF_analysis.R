@@ -42,7 +42,8 @@ for (i in seq_along(ciliated1_unique_TF)) {
   
 }
 #filtering for significant values
-ciliated1_KS_results_filtered <- ciliated1_KS_results %>% filter(p_val < 0.05)
+ciliated1_KS_results$p_adj <- p.adjust(ciliated1_KS_results$p_val)
+ciliated1_KS_results_filtered <- ciliated1_KS_results %>% filter(p_adj < 0.05)
 
 #ciliated 2 cluster for JASPAR
 ciliated2_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "ciliated 2",] %>% filter(score > 0)
@@ -63,7 +64,8 @@ for (i in seq_along(ciliated2_unique_TF)) {
   ciliated2_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-ciliated2_KS_results_filtered <- ciliated2_KS_results %>% filter(p_val < 0.05)
+ciliated2_KS_results$p_adj <- p.adjust(ciliated2_KS_results$p_val)
+ciliated2_KS_results_filtered <- ciliated2_KS_results %>% filter(p_adj < 0.05)
 
 #club cluster for JASPAR
 club_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "club",] %>% filter(score > 0)
@@ -84,7 +86,8 @@ for (i in seq_along(club_unique_TF)) {
   club_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-club_KS_results_filtered <- club_KS_results %>% filter(p_val < 0.05)
+club_KS_results$p_adj <- p.adjust(club_KS_results$p_val)
+club_KS_results_filtered <- club_KS_results %>% filter(p_adj < 0.05)
 
 #goblet cluster for JASPAR
 goblet_gene_TF_JASPAR <- final_JASPAR_specific[final_JASPAR_specific$cell_type == "goblet",] %>% filter(score > 0)
@@ -105,7 +108,8 @@ for (i in seq_along(goblet_unique_TF)) {
   goblet_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-goblet_KS_results_filtered <- goblet_KS_results %>% filter(p_val < 0.05)
+goblet_KS_results$p_adj <- p.adjust(goblet_KS_results$p_val)
+goblet_KS_results_filtered <- goblet_KS_results %>% filter(p_adj < 0.05)
 
 #ChEA3
 #adapted from JASPAR loops
@@ -130,7 +134,8 @@ for (i in seq_along(ciliated1_unique_ChEA3)) {
   ciliated1_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-ciliated1_ChEA3_KS_filtered <- ciliated1_KS_results_ChEA3 %>% filter(p_val < 0.05)
+ciliated1_KS_results_ChEA3$p_adj <- p.adjust(ciliated1_KS_results_ChEA3$p_val)
+ciliated1_ChEA3_KS_filtered <- ciliated1_KS_results_ChEA3 %>% filter(p_adj < 0.05)
 
 #ciliated 2 cluster for ChEA3
 ciliated2_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "ciliated 2",] %>%
@@ -152,7 +157,8 @@ for (i in seq_along(ciliated2_unique_ChEA3)) {
   ciliated2_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-ciliated2_ChEA3_KS_filtered <- ciliated2_KS_results_ChEA3 %>% filter(p_val < 0.05)
+ciliated2_KS_results_ChEA3$p_adj <- p.adjust(ciliated2_KS_results_ChEA3$p_val)
+ciliated2_ChEA3_KS_filtered <- ciliated2_KS_results_ChEA3 %>% filter(p_adj < 0.05)
 
 # Mucociliated for ChEA3
 mucociliated_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "mucociliated",] %>%
@@ -161,7 +167,7 @@ mucociliated_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_typ
 mucociliated_unique_ChEA3 <- as.character(unique(mucociliated_gene_TF_ChEA3$TF))
 #start with ciliated 1 cluster for ChEA3
 mucociliated_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_mucociliated), ncol = 2))
-colnames(mucociliated_KS_results_ChEA3) <- c("TF", "p_val","p_adj")
+colnames(mucociliated_KS_results_ChEA3) <- c("TF", "p_val")
 for (i in seq_along(mucociliated_unique_ChEA3)) {
   #subset target DEGs
   TF <- mucociliated_unique_ChEA3[i]
