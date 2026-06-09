@@ -142,7 +142,6 @@ ciliated2_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type =
   dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
 #as.character addition because unique originally stored as factor vector rather than character vector
 ciliated2_unique_ChEA3 <- as.character(unique(ciliated2_gene_TF_ChEA3$TF))
-#start with ciliated 1 cluster for ChEA3
 ciliated2_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_ciliated2), ncol = 2))
 colnames(ciliated2_KS_results_ChEA3) <- c("TF", "p_val")
 for (i in seq_along(ciliated2_unique_ChEA3)) {
@@ -165,7 +164,6 @@ mucociliated_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_typ
   dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
 #as.character addition because unique originally stored as factor vector rather than character vector
 mucociliated_unique_ChEA3 <- as.character(unique(mucociliated_gene_TF_ChEA3$TF))
-#start with ciliated 1 cluster for ChEA3
 mucociliated_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_mucociliated), ncol = 2))
 colnames(mucociliated_KS_results_ChEA3) <- c("TF", "p_val")
 for (i in seq_along(mucociliated_unique_ChEA3)) {
@@ -181,3 +179,47 @@ for (i in seq_along(mucociliated_unique_ChEA3)) {
 }
 mucociliated_KS_results_ChEA3$p_adj <- p.adjust(mucociliated_KS_results_ChEA3$p_val)
 mucociliated_ChEA3_KS_filtered <- mucociliated_KS_results_ChEA3 %>% filter(p_adj < 0.05)
+
+#club
+club_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "club",] %>%
+  dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
+#as.character addition because unique originally stored as factor vector rather than character vector
+club_unique_ChEA3 <- as.character(unique(club_gene_TF_ChEA3$TF))
+club_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_club), ncol = 2))
+colnames(club_KS_results_ChEA3) <- c("TF", "p_val")
+for (i in seq_along(club_unique_ChEA3)) {
+  #subset target DEGs
+  TF <- club_unique_ChEA3[i]
+  #col name is TF not symbol
+  TF_target <- club_gene_TF_ChEA3[club_gene_TF_ChEA3$TF == TF,]
+  #subset non-target DEGs
+  non_target_TF <- club_gene_TF_ChEA3[club_gene_TF_ChEA3$TF != TF,]
+  #adding results
+  club_KS_results_ChEA3$TF[i] <- TF
+  club_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
+}
+club_KS_results_ChEA3$p_adj <- p.adjust(club_KS_results_ChEA3$p_val)
+club_ChEA3_KS_filtered <- club_KS_results_ChEA3 %>% filter(p_adj < 0.05)
+#sense check since there is the same number of TFs
+club_ChEA3_KS_filtered$TF == mucociliated_ChEA3_KS_filtered$TF
+#returned false for 15 out of 16 therefore sense check passed
+#goblet
+goblet_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "goblet",] %>%
+  dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
+#as.character addition because unique originally stored as factor vector rather than character vector
+goblet_unique_ChEA3 <- as.character(unique(goblet_gene_TF_ChEA3$TF))
+goblet_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_goblet), ncol = 2))
+colnames(goblet_KS_results_ChEA3) <- c("TF", "p_val")
+for (i in seq_along(goblet_unique_ChEA3)) {
+  #subset target DEGs
+  TF <- goblet_unique_ChEA3[i]
+  #col name is TF not symbol
+  TF_target <- goblet_gene_TF_ChEA3[goblet_gene_TF_ChEA3$TF == TF,]
+  #subset non-target DEGs
+  non_target_TF <- goblet_gene_TF_ChEA3[goblet_gene_TF_ChEA3$TF != TF,]
+  #adding results
+  goblet_KS_results_ChEA3$TF[i] <- TF
+  goblet_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
+}
+goblet_KS_results_ChEA3$p_adj <- p.adjust(goblet_KS_results_ChEA3$p_val)
+goblet_ChEA3_KS_filtered <- goblet_KS_results_ChEA3 %>% filter(p_adj < 0.05)
