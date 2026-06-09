@@ -165,7 +165,7 @@ VlnPlot(so_combined, features = c("GRAMD2"))
 DotPlot(so_combined, features = c("GRAMD2"))
 VlnPlot(so_combined, features = c("SCNN1G"))
 DotPlot(so_combined, features = c("SCNN1G"))
-
+DotPlot(so_combined, features = c("MUC5B"))
 #checking
 markers <- FindAllMarkers(so_combined, only.pos = TRUE, min.pct = 0.25)
 top_markers <- markers %>% group_by(cluster) %>% top_n(n = 5, wt = avg_log2FC)
