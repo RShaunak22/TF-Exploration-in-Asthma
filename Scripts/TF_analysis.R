@@ -42,7 +42,7 @@ for (i in seq_along(ciliated1_unique_TF)) {
   
 }
 #filtering for significant values
-ciliated1_KS_results$p_adj <- p.adjust(ciliated1_KS_results$p_val)
+ciliated1_KS_results$p_adj <- p.adjust(ciliated1_KS_results$p_val, method = "BH")
 ciliated1_KS_results_filtered <- ciliated1_KS_results %>% filter(p_adj < 0.05)
 
 #ciliated 2 cluster for JASPAR
@@ -64,7 +64,7 @@ for (i in seq_along(ciliated2_unique_TF)) {
   ciliated2_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-ciliated2_KS_results$p_adj <- p.adjust(ciliated2_KS_results$p_val)
+ciliated2_KS_results$p_adj <- p.adjust(ciliated2_KS_results$p_val, method = "BH")
 ciliated2_KS_results_filtered <- ciliated2_KS_results %>% filter(p_adj < 0.05)
 
 #club cluster for JASPAR
@@ -86,7 +86,7 @@ for (i in seq_along(club_unique_TF)) {
   club_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-club_KS_results$p_adj <- p.adjust(club_KS_results$p_val)
+club_KS_results$p_adj <- p.adjust(club_KS_results$p_val, method = "BH")
 club_KS_results_filtered <- club_KS_results %>% filter(p_adj < 0.05)
 
 #goblet cluster for JASPAR
@@ -108,7 +108,7 @@ for (i in seq_along(goblet_unique_TF)) {
   goblet_KS_results$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-goblet_KS_results$p_adj <- p.adjust(goblet_KS_results$p_val)
+goblet_KS_results$p_adj <- p.adjust(goblet_KS_results$p_val, method = "BH")
 goblet_KS_results_filtered <- goblet_KS_results %>% filter(p_adj < 0.05)
 
 #ChEA3
@@ -134,7 +134,7 @@ for (i in seq_along(ciliated1_unique_ChEA3)) {
   ciliated1_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-ciliated1_KS_results_ChEA3$p_adj <- p.adjust(ciliated1_KS_results_ChEA3$p_val)
+ciliated1_KS_results_ChEA3$p_adj <- p.adjust(ciliated1_KS_results_ChEA3$p_val, method = "BH")
 ciliated1_ChEA3_KS_filtered <- ciliated1_KS_results_ChEA3 %>% filter(p_adj < 0.05)
 
 #ciliated 2 cluster for ChEA3
@@ -156,7 +156,7 @@ for (i in seq_along(ciliated2_unique_ChEA3)) {
   ciliated2_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
   
 }
-ciliated2_KS_results_ChEA3$p_adj <- p.adjust(ciliated2_KS_results_ChEA3$p_val)
+ciliated2_KS_results_ChEA3$p_adj <- p.adjust(ciliated2_KS_results_ChEA3$p_val, method = "BH")
 ciliated2_ChEA3_KS_filtered <- ciliated2_KS_results_ChEA3 %>% filter(p_adj < 0.05)
 
 # Mucociliated for ChEA3
@@ -177,7 +177,7 @@ for (i in seq_along(mucociliated_unique_ChEA3)) {
   mucociliated_KS_results_ChEA3$TF[i] <- TF
   mucociliated_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
 }
-mucociliated_KS_results_ChEA3$p_adj <- p.adjust(mucociliated_KS_results_ChEA3$p_val)
+mucociliated_KS_results_ChEA3$p_adj <- p.adjust(mucociliated_KS_results_ChEA3$p_val, method = "BH")
 mucociliated_ChEA3_KS_filtered <- mucociliated_KS_results_ChEA3 %>% filter(p_adj < 0.05)
 
 #club
@@ -198,7 +198,7 @@ for (i in seq_along(club_unique_ChEA3)) {
   club_KS_results_ChEA3$TF[i] <- TF
   club_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
 }
-club_KS_results_ChEA3$p_adj <- p.adjust(club_KS_results_ChEA3$p_val)
+club_KS_results_ChEA3$p_adj <- p.adjust(club_KS_results_ChEA3$p_val, method = "BH")
 club_ChEA3_KS_filtered <- club_KS_results_ChEA3 %>% filter(p_adj < 0.05)
 #sense check since there is the same number of TFs
 club_ChEA3_KS_filtered$TF == mucociliated_ChEA3_KS_filtered$TF
@@ -221,5 +221,5 @@ for (i in seq_along(goblet_unique_ChEA3)) {
   goblet_KS_results_ChEA3$TF[i] <- TF
   goblet_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
 }
-goblet_KS_results_ChEA3$p_adj <- p.adjust(goblet_KS_results_ChEA3$p_val)
+goblet_KS_results_ChEA3$p_adj <- p.adjust(goblet_KS_results_ChEA3$p_val, method = "BH")
 goblet_ChEA3_KS_filtered <- goblet_KS_results_ChEA3 %>% filter(p_adj < 0.05)
