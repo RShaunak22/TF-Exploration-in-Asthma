@@ -155,3 +155,23 @@ for (i in seq_along(ciliated2_unique_ChEA3)) {
 ciliated2_ChEA3_KS_filtered <- ciliated2_KS_results_ChEA3 %>% filter(p_val < 0.05)
 
 # Mucociliated for ChEA3
+mucociliated_gene_TF_ChEA3 <- final_ChEA3_specific[final_ChEA3_specific$cell_type == "mucociliated",] %>%
+  dplyr::select("gene","TF", "p_val_adj", "avg_log2FC")
+#as.character addition because unique originally stored as factor vector rather than character vector
+mucociliated_unique_ChEA3 <- as.character(unique(mucociliated_gene_TF_ChEA3$TF))
+#start with ciliated 1 cluster for ChEA3
+mucociliated_KS_results_ChEA3 <- data.frame(matrix(NA, nrow = nrow(final_ChEA3_mucociliated), ncol = 2))
+colnames(mucociliated_KS_results_ChEA3) <- c("TF", "p_val","p_adj")
+for (i in seq_along(mucociliated_unique_ChEA3)) {
+  #subset target DEGs
+  TF <- mucociliated_unique_ChEA3[i]
+  #col name is TF not symbol
+  TF_target <- mucociliated_gene_TF_ChEA3[mucociliated_gene_TF_ChEA3$TF == TF,]
+  #subset non-target DEGs
+  non_target_TF <- mucociliated_gene_TF_ChEA3[mucociliated_gene_TF_ChEA3$TF != TF,]
+  #adding results
+  mucociliated_KS_results_ChEA3$TF[i] <- TF
+  mucociliated_KS_results_ChEA3$p_val[i] <- ks.test(TF_target$avg_log2FC, non_target_TF$avg_log2FC)$p.val
+}
+mucociliated_KS_results_ChEA3$p_adj <- p.adjust(mucociliated_KS_results_ChEA3$p_val)
+mucociliated_ChEA3_KS_filtered <- mucociliated_KS_results_ChEA3 %>% filter(p_adj < 0.05)
